@@ -1,0 +1,16 @@
+<div class="daily-log">
+
+  {% for h in habits %}
+    <div class="daily-item">
+
+      <span>{{ h.name }}</span>
+
+      <a class="check {% if h.is_completed_today %}done{% endif %}"
+         href="{{ url_for('main.toggle_habit', habit_id=h.id) }}">
+        <i data-lucide="check-circle"></i>
+      </a>
+
+    </div>
+  {% endfor %}
+
+</div>

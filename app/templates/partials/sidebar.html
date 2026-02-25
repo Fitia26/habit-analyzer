@@ -1,0 +1,18 @@
+<aside class="sidebar">
+  <div class="sidebar-user">
+    <p class="welcome">Welcome, <strong>{{ current_user.username }}</strong></p>
+  </div>
+
+  <button class="sidebar-btn" id="openHabitModal" onclick="openModal()">
+    + New Habit
+  </button>
+
+  <nav class="sidebar-nav">
+    <a href="{{ url_for('main.dashboard') }}"
+       class="menu-item active">
+      📊 Dashboard
+    </a>
+  </nav>
+
+  
+</aside>

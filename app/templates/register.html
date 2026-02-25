@@ -1,0 +1,42 @@
+{% extends "base_auth.html" %}
+
+{% block content %}
+<div class="card">
+
+
+    {% for message in get_flashed_messages() %}
+        <div class="flash">{{ message }}</div>
+    {% endfor %}
+
+
+    <div class="auth-page">
+        <div class="auth-card">
+            <h1>CREATE AN ACCOUNT</h1>
+            <form method="POST">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input name="username" type="text" placeholder="YourUsername" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input name="email" type="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input name="password" type="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Register</button>
+            </form>
+
+            <p class="auth-footer">
+                Already have account?
+                <a href="{{ url_for('main.login') }}">Login</a>
+            </p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

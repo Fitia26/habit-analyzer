@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Habit Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+<body>
+<!-- TOP NAVBAR -->
+  <header class="top-navbar">
+    <div class="nav-left">
+      <span class="nav-logo">HabitAnalyzer</span>
+    </div>
+
+    <div class="nav-right">
+      <a href="{{ url_for('main.dashboard') }}" class="nav-btn">
+        My Habits
+      </a>
+
+      <a href="{{ url_for('main.logout') }}" class="nav-btn danger">
+        Logout
+      </a>
+    </div>
+  </header>
+
+
+<div class="app-layout">
+    
+    <aside class="sidebar">
+      {% include "partials/sidebar.html" %}
+    </aside>
+
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+
+</div>
+
+<!-- Habit Modal -->
+<div id="habitModal" class="modal">
+  <div class="modal-content">
+    
+    <div class="modal-header">
+      <h3>Create New Habit</h3>
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+    </div>
+
+    <form method="POST" action="{{ url_for('main.habits') }}" class="habit-form">
+      
+      <div class="form-group">
+        <label>Habit Name</label>
+        <input name="name" placeholder="e.g. Workout" required>
+      </div>
+
+      <div class="form-group">
+        <label>Target per week</label>
+        <input type="number" name="target" min="1" max="7" required>
+      </div>
+
+      <button type="submit" class="btn-primary full-btn">
+        Add Habit
+      </button>
+
+    </form>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  lucide.createIcons();
+  function openModal() {
+    document.getElementById("habitModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("habitModal").style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    const modal = document.getElementById("habitModal");
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+
+  
+</script>
+
+</body>
+</html>

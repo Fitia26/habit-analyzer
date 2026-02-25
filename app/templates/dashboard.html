@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block content %}
+{% if habits|length == 0 %}
+
+<div class="empty-dashboard">
+
+  <div class="empty-card">
+    <div class="empty-icon">🌱</div>
+
+    <h2>Start building better habits</h2>
+
+    <p>
+      You don’t have any habits yet.<br>
+      Create your first habit and track your progress every day.
+    </p>
+
+    <a onclick="openModal()" class="btn-primary">
+      + Add your first habit
+    </a>
+  </div>
+
+</div>
+
+{% else %}
+
+<h1 class="page-title">Dashboard</h1>
+
+<section class="stats-grid">
+  {% if habits %}
+    {% for h in habits %}
+      <div class="stat-card">
+        <form method="POST"
+              action="{{ url_for('main.delete_habit', habit_id=h.id) }}"
+              class="delete-form"
+              onsubmit="return confirm('Delete this habit permanently?');">
+          <button type="submit" class="delete-icon">🗑️</button>
+        </form>
+        
+        <h3>{{ h.name }}</h3>
+
+        <div class="progress-bar">
+          <div class="progress-fill" data-score="{{ h.score }}"></div>
+        </div>
+
+        <p class="stat-text">
+          {{ h.completed }} / {{ h.target }} days
+        </p>
+
+        <span class="badge {{ h.status|lower }}">
+          {{ h.status }}
+        </span>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No habits yet. Start by adding one 💪</p>
+  {% endif %}
+  
+</section>
+
+<section class="daily-section">
+  <h2>Daily Check-In</h2>
+  {% include "partials/daily_log.html" %}
+</section>
+
+<section class="chart-section">
+  <h2>Weekly Progress</h2>
+  <canvas id="weeklyChart"></canvas>
+</section>
+
+<section class="insights-section">
+  <h2>📊 Insights</h2>
+
+  <div class="insights-grid">
+    {% for h in habits %}
+    <div class="insight-card">
+      <div class="icon">📈</div>
+      <div class="content">
+        <strong>{{ h.name }}</strong>
+        <p>{{ h.insight }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+
+<section class="tips-section">
+  <h2>💡 Personalized Tips</h2>
+
+  <div class="tips-grid">
+    {% for h in habits %}
+    <div class="tip-card">
+      <div class="icon">✅</div>
+      <div class="content">
+        <strong>{{ h.name }}</strong>
+        <p>{{ h.tip }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+
+<script>
+fetch("/api/weekly-data")
+  .then(response => response.json())
+  .then(data => {
+
+    const ctx = document.getElementById("weeklyChart");
+
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: data.labels,
+            datasets: data.datasets
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    ticks: {
+                        stepSize: 1,
+                        callback: v => v === 1 ? "Done" : "Missed"
+                    }
+                }
+            }
+        }
+    });
+
+  });
+
+document.querySelectorAll(".progress-fill").forEach(bar=>{
+   bar.style.width = bar.dataset.score + "%";
+});
+</script>
+{% endif %}
+
+{% endblock %}
